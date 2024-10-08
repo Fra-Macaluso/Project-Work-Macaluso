@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <!-- Dichiarazione della codifica dei caratteri e della lingua della pagina -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Work FraM</title>
+
+    <!-- Collegamento a un font Google esterno (New Amsterdam) -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=New+Amsterdam:wght@400;700&display=swap">
+    
+    <style>
+        /* Stile globale per il corpo della pagina */
+        body {
+            margin: 0;                          /* Rimuove margini predefiniti */
+            padding: 0;                         /* Rimuove padding predefiniti */
+            font-family: Arial, sans-serif;     /* Font principale */
+            height: 100vh;                      /* Imposta altezza a 100% della viewport */
+            display: flex;                      /* Usa Flexbox per il posizionamento centrale */
+            justify-content: center;            /* Centra orizzontalmente */
+            align-items: center;                /* Centra verticalmente */
+            position: relative;                 /* Elementi interni possono essere posizionati in modo assoluto */
+            overflow: hidden;                   /* Nasconde il contenuto che esce dai bordi */
+        }
+
+        /* Immagine di sfondo */
+        .background-image {
+            position: absolute;                 /* Posiziona l'immagine in modo assoluto rispetto al body */
+            top: 0;
+            left: 0;
+            width: 100%;                        /* Occupa tutta la larghezza della finestra */
+            height: 100%;                       /* Occupa tutta l'altezza della finestra */
+            background-image: url('media/sfondo.jpg'); /* Immagine di sfondo */
+            background-size: cover;             /* L'immagine copre tutta l'area */
+            background-position: center;        /* Centra l'immagine */
+            z-index: -1;                        /* Metti l'immagine dietro gli altri elementi */
+            opacity: 0.5;                       /* Rende l'immagine semi-trasparente */
+        }
+
+        /* Contenitore principale della pagina */
+        .container {
+            position: relative;                 /* Imposta il contesto di posizionamento per gli elementi figli */
+            width: 100%;                        /* Occupa tutta la larghezza della finestra */
+            height: 100%;                       /* Occupa tutta l'altezza della finestra */
+        }
+
+        /* Logo posizionato in alto a sinistra */
+        .top-left-logo {
+            position: absolute;                 /* Posiziona l'elemento in modo assoluto rispetto al suo contenitore con posizione relativa */
+            top: 20px;                          /* Posiziona l'elemento a 20 pixel dal bordo superiore del suo contenitore */
+            left: 20px;                         /* Posiziona l'elemento a 20 pixel dal bordo sinistro del suo contenitore */
+            width: 80px;                        /* Imposta la larghezza dell'elemento a 80 pixel */
+            height: auto;                       /* Imposta l'altezza automatica per mantenere le proporzioni dell'immagine */
+        }
+
+        /* Testo vicino al logo in alto a sinistra */
+        .logo-text {
+            position: absolute;                 /* Posiziona l'elemento in modo assoluto rispetto al suo contenitore con posizione relativa */
+            top: 45px;                          /* Posiziona l'elemento a 45 pixel dal bordo superiore del suo contenitore */
+            left: 120px;                        /* Posiziona l'elemento a 120 pixel dal bordo sinistro del suo contenitore */
+            font-size: 18px;                    /* Imposta la dimensione del testo a 18 pixel */
+            color: #000;                      /* Colore del testo nero (hex #000000) */
+            font-weight: bold;                  /* Applica uno stile di testo in grassetto */
+        }
+
+        /* Intestazione centrata orizzontalmente */
+        .centered-header {
+            position: absolute;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);      /* Centra orizzontalmente */
+            font-size: 48px;
+            color: #000;                    /* Colore del testo nero */
+            font-family: 'New Amsterdam', sans-serif; /* Font personalizzato */
+            font-weight: normal;              /* Peso del font normale */
+            letter-spacing: 1px;              /* Spazio tra le lettere */
+        }
+
+        /* Contenitore del testo centrato, con effetto flip */
+        .centered-text-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);   /* Centra verticalmente e orizzontalmente */
+            width: 400px;
+            height: 300px;
+            perspective: 1000px;                /* Aggiunge un effetto prospettico 3D */
+            display: flex;                      /* Usa Flexbox per centrare i contenuti interni */
+            align-items: center;
+        }
+
+        /* Carta che si gira (flip) */
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            transform-style: preserve-3d;       /* Permette la rotazione 3D */
+            transition: transform 0.8s;         /* Durata della transizione */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Effetto flip al passaggio del mouse */
+        .centered-text-container:hover .flip-card {
+            transform: rotateY(180deg);         /* Ruota di 180 gradi sull'asse Y */
+        }
+
+        /* Faccia frontale della carta */
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;        /* Nasconde il retro quando non visibile */
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            border-radius: 10px;                /* Angoli arrotondati */
+        }
+
+        /* Immagine sulla faccia frontale della carta */
+        .flip-card-front {
+            background-image: url('media/Foglia.png');
+        }
+
+        /* Immagine sulla faccia posteriore della carta */
+        .flip-card-back {
+            background-image: url('media/foglia1.png');
+            transform: rotateY(180deg);        /* Ruota la faccia posteriore */
+        }
+
+        /* Testo centrato all'interno della carta */
+        .centered-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%); /* Centra il testo */
+            font-size: 23.5px;
+            color: green;                   /* Colore del testo verde */
+            text-decoration: none;            /* Nessuna sottolineatura */
+            padding: 10px 20px;               /* Padding interno */
+            border-radius: 5px;               /* Angoli arrotondati */
+            font-weight: bold;                /* Testo in grassetto */
+            z-index: 2;                       /* Sopra rispetto ad altri elementi */
+        }
+
+        /* Cambia il colore e lo sfondo quando si passa il mouse sul testo */
+        .centered-text:hover {
+            color: white;
+            background-color: green;
+        }
+
+        /* Bottone per tornare al sito, posizionato in basso */
+        .back-to-site {
+            position: absolute;
+            top: 90%;
+            right: 45%;
+            font-size: 15px;
+            color: green;
+            background-color: #dcdcdc7e;    /* Colore di sfondo trasparente */
+            text-decoration: none;            /* Rimuove la sottolineatura */
+            padding: 15px 20px;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background-color 0.3s, color 0.3s, transform 0.3s; /* Effetti di transizione */
+            z-index: 3;                       /* Priorità sopra gli altri elementi */
+        }
+
+        /* Effetto hover sul bottone "back-to-site" */
+        .back-to-site:hover {
+            background-color: #f7c600;      /* Cambia colore di sfondo */
+            color: green;
+            transform: scale(1.1);            /* Ingrandisce leggermente */
+        }
+
+        /* Box di testo sulla sinistra */
+        .text-box {
+            position: absolute;              /* Posiziona l'elemento in modo assoluto rispetto al suo primo antenato posizionato */
+            top: 50%;                        /* Posiziona il bordo superiore dell'elemento al 50% dell'altezza del contenitore */
+            left: 5%;                        /* Posiziona il bordo sinistro dell'elemento al 5% della larghezza del contenitore */
+            transform: translateY(-50%);     /* Sposta l'elemento verso l'alto del 50% della sua altezza per centrarlo verticalmente */
+            padding: 15px;                   /* Aggiunge uno spazio interno di 15px su tutti i lati dell'elemento */
+            border-radius: 5px;              /* Arrotonda gli angoli dell'elemento con un raggio di 5px */
+            font-size: 16px;                 /* Imposta la dimensione del font a 16px */
+            color: black;                  /* Imposta il colore del testo a nero */
+            width: 200px;                    /* Imposta la larghezza dell'elemento a 200px */
+            text-align: left;                /* Allinea il testo all'interno dell'elemento a sinistra */
+        }
+
+        /* Sezione a destra che contiene i box */
+        .right-section {
+            position: absolute;
+            top: 50%;
+            right: 15%;
+            transform: translateY(-50%);
+            width: 300px;                   /* Larghezza più grande per contenere i box */
+        }
+
+        /* Titolo della sezione a destra */
+        .section-title {
+            font-size: 25px;
+            color: green;
+            font-weight: bold;
+            margin-bottom: 20px;            /* Spazio sotto il titolo */
+            text-align: center;
+            background-color: #dcdcdc7e;  /* Sfondo bianco trasparente */
+            padding: 10px;                  /* Spazio intorno al testo */
+            border-radius: 5px;             /* Angoli arrotondati */
+            text-decoration: none;          /* Rimuove la sottolineatura */
+            display: block;                 /* Occupa tutta la larghezza disponibile */
+            white-space: nowrap;            /* Evita il ritorno a capo */
+        }
+
+        /* Effetto hover sul titolo della sezione */
+        .section-title:hover {
+            background-color: #f7c600;
+            color: green;
+            transform: scale(1.05);
+        }
+
+        /* Griglia per disporre i box */
+        .right-boxes {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Crea due colonne di uguale larghezza */
+            gap: 20px;                             /* Spazio tra i box */
+        }
+
+        /* Stile dei singoli box */
+        .right-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100px; /* Altezza fissa iniziale */
+            width: 150px;
+            overflow-y: hidden; /* Nasconde il contenuto in eccesso */
+        }
+
+        /* Effetto hover sui box */
+        .right-box:hover {
+            background-color: #e0e0e0;
+            transform: scale(1.05);
+            height: 200px; /* Altezza maggiore quando si passa il mouse */
+            overflow-y: auto; /* Abilita lo scorrimento verticale */
+        }
+
+        /* Titolo all'interno del box */
+        .right-box h3 {
+            margin: 0;
+            font-size: 18px;
+            color: green;
+        }
+
+        /* Testo all'interno del box */
+        .right-box p {
+            margin: 10px 0 0;
+            font-size: 14px;
+            color: #333;
+            overflow: hidden; /* Nasconde il testo in eccesso */
+        }
+
+        /* Stile per il box "Seguici" */
+        .seguici-box {
+            background-color: #f0f0f0;
+            padding: 20px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            overflow: hidden;
+            cursor: pointer;
+            height: 100px; /* Altezza iniziale */
+            width: 150px;
+            overflow-y: hidden; /* Nasconde il contenuto in eccesso */
+        }
+
+        /* Effetto hover sul box "Seguici" */
+        .seguici-box:hover {
+            background-color: #f7c600;
+            transform: scale(1.05);
+            height: 120px; /* Altezza massima specifica per "Seguici" */
+        }
+
+        /* Titolo all'interno del box "Seguici" */
+        .seguici-box h3 {
+            margin: 0;
+            font-size: 18px;
+            color: green;
+        }
+
+    </style>
+</head>
+<body>
+    <a href="https://www.legambiente.it/" class="back-to-site" target="_blank">Torna al sito web</a>
+    <div class="background-image"></div>
+    <div class="container">
+        <img src="media/cigno.png" alt="Logo" class="top-left-logo">
+        <div class="logo-text">Legambiente</div>
+        <div class="centered-header">Bilancio Sociale 2022</div>
+        <div class="text-box">
+            <strong>LEGAMBIENTE NAZIONALE - AP RETE ASSOCIATIVA - ETS</strong> <br>       
+            Via Salaria, 403 - 00199 Roma<br>
+            Telefono: 06 862681<br>
+            Codice fiscale 80458470582<br>
+            Partita IVA 02143941009<br>
+            legambiente@legambiente.it<br>
+            www.legambiente.it
+        </div>
+        <div class="centered-text-container">
+            <div class="flip-card">
+                <div class="flip-card-front"></div>
+                <div class="flip-card-back"></div>
+            </div>
+            <a href="media/file.pdf" class="centered-text" target="_blank">Scarica il PDF</a>
+        </div>
+        <!-- Sezione destra con titolo e box -->
+        <div class="right-section">
+            <a href="https://www.legambiente.it/campagne/" class="section-title" target="_blank">Cosa Facciamo:</a>
+            <div class="right-boxes">
+                <div class="right-box" onclick="window.open('https://www.legambiente.it/campagne/', '_blank')">
+                    <h3>CAMPAGNE</h3>
+                    <p>Perseguiamo obiettivi ben precisi. Con le campagne, Legambiente fornisce informazioni 
+                        chiare sullo stato di salute dell’ambiente, sensibilizzando le persone, le aziende, 
+                        le istituzioni e le politiche a prendere parte al cambiamento.</p>
+                </div>
+                <div class="right-box" onclick="window.open('https://www.legambientescuolaformazione.it/', '_blank')">
+                    <h3>EDUCAZIONE E FORMAZIONE</h3>
+                    <p>Legambiente ha a cuore i giovani cittadini, perché dall’educazione e dalla formazione 
+                        crescono generazioni capaci di cogliere la sfida di un futuro più pulito e giusto. 
+                        Progetti educativi e di partecipazione attiva per i ragazzi, opportunità per i 
+                        professionisti della scuola e tanto altro ancora.</p>
+                </div>
+                <div class="right-box" onclick="window.open('https://www.legambiente.it/rapporti-e-osservatori/', '_blank')">
+                    <h3>RAPPORTI E OSSERVATORI</h3>
+                    <p>Dati, approfondimenti scientifici, scienza partecipata e analisi delle principali 
+                        emergenze ambientali del paese e della qualità di territori, servizi, infrastrutture. 
+                        Su queste solide basi, Legambiente propone soluzioni, impugna vertenze e rende partecipi 
+                        stakeholders e cittadini.</p>
+                </div>
+                <div class="right-box" onclick="window.open('https://www.legambiente.it/vertenze/')">
+                    <h3>VERTENZE</h3>
+                    <p>Analisi e denuncia della criminalità ambientale, le ecomafie, il traffico e lo smaltimento 
+                        illecito di rifiuti, lo sfruttamento degli animali e l’abusivismo edilizio nel mirino delle 
+                        attività vertenziali e legali di Legambiente, anche grazie alle segnalazioni di cittadini.</p>
+                </div>
+                <div class="right-box" onclick="window.open('https://www.legambiente.it/economia-civile/', '_blank')">
+                    <h3>PROGETTI</h3>
+                    <p>Interveniamo sui temi dello sviluppo sostenibile anche grazie alla realizzazione di progetti 
+                        finanziati con fondi europei, nazionali o regionali. Informazione, ricerca scientifica, 
+                        coinvolgimento delle persone, delle comunità e delle istituzioni al centro dei nostri progetti.</p>
+                </div>
+                <div class="seguici-box">
+                    <h3>SEGUICI</h3>
+                    <p>
+                        <a href="https://www.facebook.com/legambiente.nazionale" target="_blank">
+                            <img src="media/facebook.png" alt="Facebook Logo" style="width: 30px; height: 30px; margin-right: 10px;"></a>
+                        <a href="https://www.instagram.com/legambiente/" target="_blank">
+                            <img src="media/Instagram_icon.png" alt="Instagram Logo" style="width: 30px; height: 30px; margin-right: 10px;"></a>
+                        <a href="https://twitter.com/Legambiente" target="_blank">
+                            <img src="media/x_logo.png" alt="X (Twitter) Logo" style="width: 30px; height: 30px; margin-right: 10px;"></a>
+                        <a href="https://www.youtube.com/user/LegambienteOnlus" target="_blank">
+                            <img src="media/logo_youtube.png" alt="YouTube Logo" style="width: 30px; height: 30px; margin-right: 10px;margin-top: 10px;"></a>
+                        <a href="https://it.linkedin.com/company/legambiente" target="_blank">
+                            <img src="media/LinkedIn_logo_initials.png" alt="LinkedIn Logo" style="width: 30px; height: 30px; margin-top: 10px;"></a>
+                    </p>
+                </div>
+            </div>
+        </div>        
+    </div>
+</body>
+</html>
